@@ -1,84 +1,76 @@
-//PRE-ENTREGA 3
-
-// Array - almaceno productos
- const catalogoProductos = [
-    {
-        id: 1,
-        nombre: "Remera estampada",
-        precio: 250,
-        img: "https://img.freepik.com/free-photo/front-view-abstract-natural-pigmented-t-shirt_23-2148734454.jpg?w=740&t=st=1706066546~exp=1706067146~hmac=279d11cd5c5b3f77c916459bb9c6d19006351ff4ca7fbc29d51687d0df86e88d",
-        cantidad: 1,
-    },
-    {   
-        id: 2,
-        nombre: "Pantalon de cuero",
-        precio: 500,
-        img:"https://img.freepik.com/free-photo/croppe-photo-fashionable-stylish-lady-dressed-black-pants-white-blouse-posing-background-car-outdoors_132075-9145.jpg?w=740&t=st=1706066720~exp=1706067320~hmac=b54a6e9becf07f522f383e39ae3bfc8b11e30ebddbddce8dfc1ef44e4ff11e0f",
-        cantidad: 1,
-    },
-    {
-        id: 3,
-        nombre: "Zapatillas negras",
-        precio: 500,
-        img: "https://cdn.pixabay.com/photo/2017/07/23/02/40/leather-shoes-2530457_1280.jpg",
-        cantidad: 1,
-    },
-    {
-        id: 4,
-        nombre: "Aros plateados",
-        precio: 300,
-        img: "https://img.freepik.com/free-photo/still-life-aesthetic-earrings_23-2149649171.jpg?w=740&t=st=1706066830~exp=1706067430~hmac=10a4a4077d0e51c3ceab749a7662fdf0fb3343dfcd812fc6c743bddf6eb789aa",
-        cantidad: 1,
-    },
-  ];
-
+//ENTEGA FINAL
 const shopContent = document.getElementById("shopContent");
 const verCarrito = document.getElementById("verCarrito");
 const modalContainer = document.getElementById("modalContainer");
 
 let carrito = JSON.parse(localStorage.getItem("compras")) || [];
 
-// Card y pusheo del carrito
-catalogoProductos.forEach((product) => {
-    let content = document.createElement("div");
-    content.className = "card";
-    content.innerHTML = `
+const getProducts = async () => {
+    const response = await fetch("products.json");
+    const data = await response.json();
+    // Card y pusheo del carrito
+    data.forEach((product) => {
+        let content = document.createElement("div");
+        content.className = "card";
+        content.innerHTML = `
         <img src="${product.img}">
         <h3>${product.nombre}</h3>
         <p class="precio">${product.precio} $ </p>
     `;
 
-    shopContent.append(content);
+        shopContent.append(content);
 
-    let comprar = document.createElement("button");
-    comprar.innerText = "comprar";
-    comprar.className = "comprar";
-    content.append(comprar);
+        let comprar = document.createElement("button");
+        comprar.innerText = "Agregar";
+        comprar.className = "comprar";
+        content.append(comprar);
 
-    comprar.addEventListener("click", () => {
-    const repeat = carrito.some((repeatProduct) => repeatProduct.id === product.id);
+        comprar.addEventListener("click", () => {
+            const repeat = carrito.some((repeatProduct) => repeatProduct.id === product.id);
 
-    if(repeat){
-        carrito.map((prod) => {
-            if(prod.id === product.id){
-                prod.cantidad++;
+            if (repeat) {
+                carrito.map((prod) => {
+                    if (prod.id === product.id) {
+                        prod.cantidad++;
+                    }
+                });
+            } else {
+                carrito.push({
+                    id: product.id,
+                    img: product.img,
+                    nombre: product.nombre,
+                    precio: product.precio,
+                    cantidad: product.cantidad,
+                });
             }
+
+            Toastify({
+                text: "Agregaste un producto al carrito",
+                duration: 2000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                stopOnFocus: true,
+                style: {
+                    background: "linear-gradient(to right, #70001f, #e6b5bc)",
+                },
+                offset: {
+                    x: '1rem',
+                    y: '3.5rem'
+                },
+                onClick: function () { }
+            }).showToast();
+
+
+            saveLocal();
         });
-    }else{
-        carrito.push({
-            id: product.id,
-            img: product.img,
-            nombre: product.nombre,
-            precio: product.precio,
-            cantidad: product.cantidad,
-        });
-    }
-    saveLocal();
     });
-});
+};
+
+getProducts();
 
 // Creacion modal con carrito
-    const muestraCarrito = () => {
+const muestraCarrito = () => {
     modalContainer.innerHTML = "";
     modalContainer.style.display = "flex";
     const modalHeader = document.createElement("div");
@@ -95,11 +87,32 @@ catalogoProductos.forEach((product) => {
             <img src="${product.img}">
             <h3>${product.nombre}</h3>
             <p>${product.precio} $</p>
+            <span class="restar"> - </span>
             <p>Cantidad: ${product.cantidad}</p>
+            <span class="sumar"> + </span>
             <p>Total: ${product.cantidad * product.precio} </p>
         `;
 
         modalContainer.append(carritoContent);
+
+        //Suma y resta de cantidades
+        let restar = carritoContent.querySelector(".restar");
+
+        restar.addEventListener("click", () => {
+            if (product.cantidad !== 1) {
+                product.cantidad--;
+            }
+            saveLocal();
+            muestraCarrito();
+        });
+
+        let sumar = carritoContent.querySelector(".sumar");
+
+        sumar.addEventListener("click", () => {
+            product.cantidad++;
+            saveLocal();
+            muestraCarrito();
+        });
 
         //Boton ELIMINAR
         let eliminar = document.createElement("span");
@@ -149,7 +162,7 @@ verCarrito.addEventListener("click", muestraCarrito);
 
 //Ejecucion de eliminar producto y actualizacion en el local storage
 const eliminarProducto = () => {
-    const buscaId =  carrito.find((element) => element.id);
+    const buscaId = carrito.find((element) => element.id);
 
     carrito = carrito.filter((carritoId) => {
         return carritoId !== buscaId;

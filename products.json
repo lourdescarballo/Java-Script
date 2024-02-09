@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "nombre": "Remera estampada",
+        "precio": 250,
+        "img": "https://img.freepik.com/free-photo/front-view-abstract-natural-pigmented-t-shirt_23-2148734454.jpg?w=740&t=st=1706066546~exp=1706067146~hmac=279d11cd5c5b3f77c916459bb9c6d19006351ff4ca7fbc29d51687d0df86e88d",
+        "cantidad": 1
+    },
+    {   
+        "id": 2,
+        "nombre": "Pantalon de cuero",
+        "precio": 500,
+        "img":"https://img.freepik.com/free-photo/croppe-photo-fashionable-stylish-lady-dressed-black-pants-white-blouse-posing-background-car-outdoors_132075-9145.jpg?w=740&t=st=1706066720~exp=1706067320~hmac=b54a6e9becf07f522f383e39ae3bfc8b11e30ebddbddce8dfc1ef44e4ff11e0f",
+        "cantidad": 1
+    },
+    {
+        "id": 3,
+        "nombre": "Zapatillas negras",
+        "precio": 500,
+        "img": "https://cdn.pixabay.com/photo/2017/07/23/02/40/leather-shoes-2530457_1280.jpg",
+        "cantidad": 1
+    },
+    {
+        "id": 4,
+        "nombre": "Aros plateados",
+        "precio": 300,
+        "img": "https://img.freepik.com/free-photo/still-life-aesthetic-earrings_23-2149649171.jpg?w=740&t=st=1706066830~exp=1706067430~hmac=10a4a4077d0e51c3ceab749a7662fdf0fb3343dfcd812fc6c743bddf6eb789aa",
+        "cantidad": 1
+    }
+  ]
